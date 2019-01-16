@@ -1,14 +1,17 @@
 DECLARE
-	v_nom Emp.ename%type;
-	v_salaire Emp.sal%type;
-	v_commission Emp.comm%type;
-	v_nomDepartement Dept.dname%type;
+	v_numCol1 Temp.num_col1%type;
+	v_numCol2 Temp.num_col2%type;
+	v_charCol Temp.char_col%type;
+	
 	
 BEGIN
-	SELECT Emp.ename, Emp.sal, Emp.comm, Dept.dname INTO v_nom, v_salaire, v_commission, v_nomDepartement
-	FROM Emp, Dept
-	WHERE Emp.deptno=Dept.deptno and Emp.ename='MILLER';
-	dbms_output.put_line(v_nom || ' ' || v_salaire || ' ' || v_commission || ' ' || v_nomDepartement);
+	FOR i IN 1..10 LOOP
+		IF mod(i,2)=0 THEN
+			INSERT INTO Temp Values(i, i*100, i || ' est paire');
+		ELSE
+			INSERT INTO Temp Values(i, i*100, i || ' est impair');
+		END IF;
+	END LOOP;
 COMMIT;
 END;
 /
