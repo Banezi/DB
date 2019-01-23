@@ -85,7 +85,7 @@ BEGIN
 		FETCH curseur INTO v_table_name;
 		EXIT WHEN(curseur%NOTFOUND);
 		dbms_output.put_line(v_table_name);
-		v_req := 'Create table ' || v_table_name || '_old as Select * FROM ' || v_table_name;
+		v_req := 'Create OR Replace table ' || v_table_name || '_old as Select * FROM ' || v_table_name;
 		dbms_output.put_line(v_req);
 		execute immediate v_req;
 	END LOOP;
