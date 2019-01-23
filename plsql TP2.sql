@@ -76,7 +76,7 @@ END;
 
 --B
 DECLARE
-	v_req varchar(200);
+	v_req varchar(300);
 	Cursor curseur IS SELECT table_name FROM user_tables;
 	v_table_name User_tables.table_name%type;
 BEGIN
