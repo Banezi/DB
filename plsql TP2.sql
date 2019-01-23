@@ -46,3 +46,30 @@ EXCEPTION WHEN no_data_found THEN
 COMMIT;
 END;
 /
+									      
+-- A-3
+CREATE OR REPLACE PROCEDURE raisesalary_bane(emp_id Emp.empno%type, amount Emp.sal%type)
+IS 
+	v_salaire_augmente Emp.sal%type default 0;
+	v_salaire Emp.sal%type;
+	v_empno Emp.empno%type;
+	v_job Emp.job%type;
+	v_req varchar(200);
+	v_resultat number;
+BEGIN
+	SELECT empno, sal INTO v_empno, v_salaire FROM Emp WHERE empno = emp_id;
+	v_salaire_augmente := v_salaire + amount;
+	v_resultat := salok_bane(v_job, v_salaire_augmente);
+	IF(v_resultat = 1) THEN
+		dbms_output.put_line('Le salaire augmenté est dans l''intervalle');
+		v_req := 'Update Emp set sal = ' || v_salaire_augmente || ' Where empno = ' || emp_id;
+		dbms_output.put_line(v_req);
+		execute immediate v_req;
+	ELSE
+		dbms_output.put_line('Le salaire augmenté n''est pas dans l''intervalle');
+	END IF;
+EXCEPTION WHEN no_data_found THEN
+	dbms_output.put_line('L''employé ' || emp_id || ' n''existe pas dans la base');
+COMMIT;
+END;
+/									      
