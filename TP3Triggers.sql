@@ -126,3 +126,54 @@ END;
 /
 
 Commit;
+
+-- 8 - Augmentation changement job
+create or replace trigger ModifSal
+before update of sal on emp
+for each row
+
+declare
+margesal number ;
+v_sal emp.sal%type ;
+v_lsalaire SalIntervalle_F2.lsal%type;
+v_hsalaire SalIntervalle_F2.hsal%type;
+
+begin
+
+        select lsal , hsal into v_lsalaire , v_hsalaire
+        from SalIntervalle_F2
+        where job = :new.job ;
+        v_sal  := :old.sal+100;
+        if v_sal  > v_hsalaire then
+            v_sal := v_hsalaire;
+        elsif v_sal < v_lsalaire then
+            v_sal  := v_lsalaire  ;
+        else
+            dbms_output.put_line('nickel');
+        end if ;
+
+    update emp set sal= v_sal where empno = :old.empno ;
+end ;
+/
+Commit;
+
+
+--- pour supprimer tous les object
+set serveroutput on
+declare
+    v_statement varchar2(80) ;
+    cursor selectAllObject is
+        select object_type , object_name
+        from user_objects ;
+begin
+    for objet in selectAllObject loop
+    v_statement := 'DROP '||objet.object_type || ' ' ||objet.object_name ;
+    dbms_output.put_line(v_statement);
+    --Execute Immediate v_statement;
+    end loop ;
+
+   
+
+end;
+/
+Commit;
