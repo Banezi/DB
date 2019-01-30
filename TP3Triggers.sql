@@ -93,6 +93,8 @@ BEGIN
         typemodif := 'DELETE';
     END IF;
 
-    UPDATE STATS_bane SET NBMAJ = NBMAJ + 1 WHERE TypeMaj = typemodif;
+    UPDATE STATS_bane SET NBMAJ = NBMAJ + 1, Date_derniere_Maj= sysdate WHERE TypeMaj = typemodif;
 END;
 /
+
+Commit;
