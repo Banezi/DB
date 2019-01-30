@@ -98,3 +98,31 @@ END;
 /
 
 Commit;
+
+-- 7-B - Tester l’effet de la présence et de l’absence de
+--la clause FOR EACH ROW sur le comportement  du  déclencheur  en  utilisant  une  requête 
+-- qui  modifie  plusieurs  n-uplets (ex. UPDATE EMP SET SAL = SAL * 1.05;)
+UPDATE EMP SET SAL = SAL * 1.05;)
+CREATE OR REPLACE TRIGGER intredir_modif_weekend
+BEFORE  INSERT OR DELETE OR UPDATE ON Emp 
+
+DECLARE 
+    typemodif varchar(6);
+BEGIN
+    IF INSERTING THEN
+        typemodif := 'INSERT';
+    END IF;
+
+    IF UPDATING THEN
+        typemodif := 'UPDATE';
+    END IF;
+
+    IF DELETING THEN
+        typemodif := 'DELETE';
+    END IF;
+
+    UPDATE STATS_bane SET NBMAJ = NBMAJ + 1, Date_derniere_Maj= sysdate WHERE TypeMaj = typemodif;
+END;
+/
+
+Commit;
