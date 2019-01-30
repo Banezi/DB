@@ -71,3 +71,28 @@ CREATE TABLE STATS_bane
        ('UPDATE', 0, NULL),
        ('DELETE', 0, NULL);
 COMMIT;
+
+-- 7-A - Définir un déclencheur après insertion/modification/suppression de la table EMP
+--permettant de mettre à jour automatiquement la table STATS_votrenom. Tester
+--son utilisation en effectuant diverses mises à jour sur la table EMP
+CREATE OR REPLACE TRIGGER intredir_modif_weekend
+BEFORE  INSERT OR DELETE OR UPDATE ON Emp 
+FOR EACH ROW
+DECLARE 
+    typemodif varchar(6);
+BEGIN
+    IF INSERTING THEN
+        typemodif := 'INSERT';
+    END IF;
+
+    IF UPDATING THEN
+        typemodif := 'UPDATE';
+    END IF;
+
+    IF DELETING THEN
+        typemodif := 'DELETE';
+    END IF;
+
+    UPDATE STATS_bane SET NBMAJ = NBMAJ + 1 WHERE TypeMaj = typemodif;
+END;
+/
